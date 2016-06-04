@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    background: black;
+  }
+
+  .overlay {
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  header {
+    background: black;
+    height: 40px;
+    position: absolute;
+    width: 100%;
+  }
+
+  .video {
+    display: none;
+  }
+
+  .background {
+    display: block;
+    opacity: 0;
+  }
+
+  header, footer {
+    position: absolute;
+    background: black;
+    height: 40px;
+    width: 100%;
+  }
+
+  footer {
+    bottom: 0;
+  }
+
+  #generate {
+    position: absolute;
+    width: 400px;
+    left: 50%;
+    z-index: 9999;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    top: 0;
+    margin: 0;
+    padding: 0;
+    margin-left: -200px;
+    padding-top: 100px;
+    color: #fff;
+    display: none;
+  }
+
+  #generate label {
+    padding: 30px 30px 10px;
+    color: #fff;
+    display: block;
+  }
+
+  #generate .input {
+    margin: 0 30px;
+    width: calc(100% - 120px);
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    font-size: 1.3em;
+    outline: none;
+    color: #fff;
+  }
+
+  #generate .submit {
+    margin: 25px 30px;
+    border: none;
+    padding: 10px 30px;
+    background: black;
+    color: #fff;
+    font-size: 1.2em;
+  }
+
+  #title {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 70px;
+    color: #fff;
+    width: 300px;
+    text-align: right;
+    font-weight: normal;
+    text-shadow: 0 0 20px black;
+  }
+
+  #generate-link {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 65px;
+    color: #fff;
+    width: 295px;
+    text-align: right;
+    font-weight: normal;
+    text-shadow: 0 0 20px black;
+    padding-right: 10px;
+    opacity: 0.6;
+    text-decoration: underline;
+  }
+
+  .overlay {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAQAAADYv8WvAAAAEUlEQVQI12NgePyfgeE/EAIAFBUD4aE/TggAAAAASUVORK5CYII=);
+  }
+</style>
+<body>
+  <header></header>
+  <div class="overlay"></div>
+  <div class="video sound" id="sound"></div>
+  <div class="video background" id="background"></div>
+  <h1 id="title"></h1>
+  <a href="#" id="generate-link">sen de yap</a>
+  <form id="generate">
+    <label>Arkaplan Video'su (Youtube ID)</label>
+    <input type="text" name="bg" class="input" id="background_video_id" />
+    <label>Ses İçeren Video (Youtube ID)</label>
+    <input type="text" name="sound" class="input" id="sound_video_id" />
+    <label>Başlık (Önemsiz)</label>
+    <input type="text" name="title" class="input" />
+    <input type="submit" class="submit" />
+  </form>
+  <footer></footer>
+  <script>
+    var queryString = function (param) {
+      var parts = location.search.split(param + '=');
+      return parts[1] && parts[1].split('&')[0];
+    };
+
+    var playVideo = function (videoId, htmlId, volume) {
+      new YT.Player(htmlId, {
+        height: window.innerHeight,
+        width: window.innerWidth,
+        videoId: videoId,
+        playerVars: {'controls': 0, loop: 1},
+        events: {
+          'onReady': function (event) {
+            event.target.playVideo();
+            event.target.setVolume(volume);
+          },
+          'onStateChange': function(event){
+            if (event.data === YT.PlayerState.ENDED) {
+              event.target.playVideo();
+            }
+          }
+        }
+      });
+    }
+
+    var App = function (bgId, soundId, title) {
+      playVideo(bgId, 'background', 0);
+      playVideo(soundId, 'sound', 100);
+
+      setTimeout(function () {
+        var background = document.getElementById('background');
+        background.style.opacity = 1;
+      }, 3000);
+
+      if (title) {
+        var titleElement = document.getElementById('title');
+        titleElement.style.display = 'block';
+        titleElement.innerHTML = (
+          unescape(title)
+           .replace('+', ' ')
+           .replace(/(<([^>]+)>)/ig,"")
+        );
+      }
+
+      var generateLink = document.getElementById('generate-link');
+      generateLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('generate').style.display = 'block';
+      });
+    }
+
+    var onYouTubeIframeAPIReady = function () {
+      if (location.search.indexOf('bg') === -1) {
+        location.href = 'index.html?sound=lLk2yFWGIjU&bg=WQO-aOdJLiw&title=Ah+Nilufer';
+        return;
+      }
+
+      App(
+        queryString('bg'),
+        queryString('sound'),
+        queryString('title')
+      );
+    }
+  </script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
