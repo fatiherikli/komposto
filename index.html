@@ -138,12 +138,12 @@
       return parts[1] && parts[1].split('&')[0];
     };
 
-    var playVideo = function (videoId, htmlId, volume) {
+    var playVideo = function (videoId, htmlId, volume, start) {
       new YT.Player(htmlId, {
         height: window.innerHeight,
         width: window.innerWidth,
         videoId: videoId,
-        playerVars: {'controls': 0, loop: 1},
+        playerVars: {'controls': 0, loop: 1, start: start},
         events: {
           'onReady': function (event) {
             event.target.playVideo();
@@ -158,9 +158,9 @@
       });
     }
 
-    var App = function (bgId, soundId, title) {
-      playVideo(bgId, 'background', 0);
-      playVideo(soundId, 'sound', 100);
+    var App = function (bgId, soundId, title, startBg, startSound) {
+      playVideo(bgId, 'background', 0, startBg);
+      playVideo(soundId, 'sound', 100, startSound);
 
       setTimeout(function () {
         var background = document.getElementById('background');
@@ -193,7 +193,9 @@
       App(
         queryString('bg'),
         queryString('sound'),
-        queryString('title')
+        queryString('title'),
+        queryString('startBg'),
+        queryString('startSound')
       );
     }
   </script>
