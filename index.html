@@ -53,35 +53,35 @@
     margin: 0;
     padding: 0;
     margin-left: -200px;
-    padding-top: 100px;
+    padding-top: 50px;
     color: #fff;
     display: none;
   }
 
   #generate label {
-    padding: 30px 30px 10px;
+    padding: 20px 30px 10px;
     color: #fff;
     display: block;
   }
 
   #generate .input {
-    margin: 0 30px;
+    margin: 0 20px;
     width: calc(100% - 120px);
     padding: 10px;
     background: rgba(0, 0, 0, 0.4);
     border: none;
-    font-size: 1.3em;
+    font-size: 1.1em;
     outline: none;
     color: #fff;
   }
 
   #generate .submit {
-    margin: 25px 30px;
+    margin: 15px 20px;
     border: none;
     padding: 10px 30px;
     background: black;
     color: #fff;
-    font-size: 1.2em;
+    font-size: 0.9em;
   }
 
   #title {
@@ -125,8 +125,12 @@
   <form id="generate">
     <label>Arkaplan Video'su (Youtube ID)</label>
     <input type="text" name="bg" class="input" id="background_video_id" />
+    <label>Arkaplan Video'su Başlangıç Saniyesi</label>
+    <input type="text" name="startBg" class="input" id="background_video_start_time" />
     <label>Ses İçeren Video (Youtube ID)</label>
     <input type="text" name="sound" class="input" id="sound_video_id" />
+    <label>Ses İçeren Video Başlangıç Saniyesi</label>
+    <input type="text" name="startSound" class="input" id="sound_start_time" />
     <label>Başlık (Önemsiz)</label>
     <input type="text" name="title" class="input" />
     <input type="submit" class="submit" />
@@ -139,12 +143,12 @@
       return parts[1] && parts[1].split('&')[0];
     };
 
-    var playVideo = function (videoId, htmlId, volume) {
+    var playVideo = function (videoId, htmlId, volume, start) {
       new YT.Player(htmlId, {
         height: window.innerHeight,
         width: window.innerWidth,
         videoId: videoId,
-        playerVars: {'controls': 0, loop: 1},
+        playerVars: {'controls': 0, loop: 1, start: start},
         events: {
           'onReady': function (event) {
             event.target.playVideo();
@@ -159,9 +163,9 @@
       });
     }
 
-    var App = function (bgId, soundId, title) {
-      playVideo(bgId, 'background', 0);
-      playVideo(soundId, 'sound', 100);
+    var App = function (bgId, soundId, title, startBg, startSound) {
+      playVideo(bgId, 'background', 0, startBg);
+      playVideo(soundId, 'sound', 100, startSound);
 
       setTimeout(function () {
         var background = document.getElementById('background');
@@ -200,7 +204,9 @@
       App(
         queryString('bg'),
         queryString('sound'),
-        queryString('title')
+        queryString('title'),
+        queryString('startBg'),
+        queryString('startSound')
       );
     }
   </script>
