@@ -130,6 +130,7 @@
     <label>Başlık (Önemsiz)</label>
     <input type="text" name="title" class="input" />
     <input type="submit" class="submit" />
+    <button class="submit" id="close-generate"> Close</button>
   </form>
   <footer></footer>
   <script>
@@ -181,6 +182,12 @@
       generateLink.addEventListener('click', function (event) {
         event.preventDefault();
         document.getElementById('generate').style.display = 'block';
+      });
+
+      var closeLink = document.getElementById('close-generate');
+      closeLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('generate').style.display = 'none';
       });
     }
 
